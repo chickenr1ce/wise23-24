@@ -1,0 +1,28 @@
+Divide-And-Conquer
+
+1. Spielfeld bauen / Wie Spielfeld codieren?
+    1.1 Spielfeldrand codieren
+    1.2 Hindernisse
+    1.3 Futterstückchen
+2. Spielfeld anzeigen
+3. Cursor-Tastem vom Benutzer abfragen
+4. Schlange steuern
+5. Schlange soll wachsen
+6. Feststellen, ob Schlange in Wand gelaufen ist
+7. Feststellen, ob Schlange in sich selber gelaufen ist
+
+
+################################################
+#                                              #
+#                                              #
+#                                              #
+#                                              #
+#                                     # #      #
+#       +++++++@                         #     #
+#       +                              #       #
+#       +                             ##       #
+#       +                                      #
+#                                              #
+#                                              #
+#                                              #
+################################################
