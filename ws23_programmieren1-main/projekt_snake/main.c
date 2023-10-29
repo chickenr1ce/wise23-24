@@ -97,7 +97,13 @@ int main() {
                 snakex = 1;
             }
             if (snakey == 0){
-                snakey = -1;
+                snakey = 1;
+            }
+            if (snakey == HOEHE-1){
+                snakey = HOEHE-2;
+            }
+            if (snakex == BREITE-1){
+                snakex = BREITE-2;
             }
 
             //Schlange an neue Stelle erzeugen
