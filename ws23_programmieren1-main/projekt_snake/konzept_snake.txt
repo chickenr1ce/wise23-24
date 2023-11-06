@@ -7,9 +7,10 @@ Divide-And-Conquer
 2. Spielfeld anzeigen
 3. Cursor-Tastem vom Benutzer abfragen
 4. Schlange steuern
-5. Schlange soll wachsen
-6. Feststellen, ob Schlange in Wand gelaufen ist
-7. Feststellen, ob Schlange in sich selber gelaufen ist
+5. Schlange läuft automatisch
+6. Schlange soll wachsen
+7. Feststellen, ob Schlange in Wand gelaufen ist
+8. Feststellen, ob Schlange in sich selber gelaufen ist
 
 
 ################################################

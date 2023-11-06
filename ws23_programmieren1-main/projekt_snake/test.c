@@ -103,46 +103,60 @@ int main() {
 
     //Spielschleife
     int counter = 0;
+    char richtung = 'w';
 
     while(1) {
         clear();
         spielfeld_ausgeben();
         counter++;
         printf("%d",counter);
+        //Schlange von alter Position löschen
+        spielfeld[snakey][snakex] = LEER;
         
-        //Hat der Benutzer eine Taste gedrückt?
-        if (kbhit()){
-            //Schlange von alter Position löschen
-            spielfeld[snakey][snakex] = LEER;
+        if (kbhit())
+            {
             char taste = getchar();
-            if (taste=='w'){
-                snakey = snakey-1;
+            richtung = taste;
             }
-            if (taste=='s'){
-                snakey = snakey+1;
-            }
-            if (taste=='a'){
-                snakex = snakex-1;
-            }
-            if (taste=='d'){
-                snakex = snakex+1;
-            }
-            if (snakex == 0){
-                snakex = 1;
-            }
-            if (snakey == 0){
-                snakey = 1;
-            }
-            if (snakey == HOEHE-1){
-                snakey = HOEHE-2;
-            }
-            if (snakex == BREITE-1){
-                snakex = BREITE-2;
-            }
+        
+        switch (richtung)
+            {
+            case 'w':
+                snakey = snakey - 1;
+                printf("going up!");
+                break;
 
-            //Schlange an neue Stelle erzeugen
-            schlange_initialisieren();
-        }
+            case 's':
+                snakey = snakey + 1;
+                break;
+
+            case 'a':
+                snakex = snakex - 1;
+                break;
+
+            case 'd':
+                snakex = snakex + 1;
+                break;
+
+            default:
+                break;
+            }
+        
+        if (snakex == 0)
+            snakex = 1;
+        
+        if (snakex == BREITE-1)
+            snakex = BREITE-2;
+        
+        if (snakey == 0)
+            snakey = 1;
+        
+        if (snakey == HOEHE-1)
+            snakey = HOEHE-2;
+
+        //Schlange an neue Stelle erzeugen
+        schlange_initialisieren();
+        
         mssleep(100);
     }
 
