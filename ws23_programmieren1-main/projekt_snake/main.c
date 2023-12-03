@@ -10,6 +10,22 @@ char spielfeld[HOEHE][BREITE];
 int snakex = BREITE/2;
 int snakey = HOEHE/2;
 
+//Länge ohne Kopf
+int snakelaenge = START_SCHLANGE_LAENGE;
+
+int sstueckx[MAX_SCHLANGE_LAENGE];
+int sstuecky[MAX_SCHLANGE_LAENGE];
+
+int old_snakey;
+int old_snakex;
+
+char richtung;
+
+void quit_game(){
+    printf("\nSpiel beendet!\n");
+    exit(0);
+}
+
 void waende_einfuegen()
 {
     for ( int i = 0; i < HOEHE; i++)
@@ -78,6 +94,18 @@ void hindernisswaende_einfuegen(int anz_waende, int lx, int ly)
     }
 }
 
+void startbereich_freimachen(){
+    //Safe Space um die Schlange
+    for (int i = HOEHE/2-START_AREA; i < HOEHE/2+START_AREA; i++)
+    {
+        for (int j = BREITE/2-START_AREA; j < BREITE/2+START_AREA; j++)
+        {
+            spielfeld[i][j] = LEER;
+        }
+        
+    }
+}
+
 
 void spielfeld_initialisieren(){
 
@@ -86,65 +114,138 @@ void spielfeld_initialisieren(){
     hindernisswaende_einfuegen(ANZAHL_HORIZONTALE_WAENDE,1,0);
     hindernisswaende_einfuegen(ANZAHL_DIAGONALE_WAENDE,1,1);
     futter_einfuegen();
-    
-    spielfeld[snakey][snakex] = SCHLANGE;
+    startbereich_freimachen();
+    spielfeld[snakey][snakex] = SCHLANGEN_KOPF;
     
 
+}
+
+void wand_check()
+{
+    if (spielfeld[snakey][snakex] == HINDERNIS || spielfeld[snakey][snakex] == RAND)
+    {   
+        printf("\nDu hast die Schlange in die Wand gefahren!\n");
+        quit_game();
+    }
+
+    if (spielfeld[snakey][snakex] == FUTTER)
+    {
+        snakelaenge++;
+    }
 }
 
 void schlange_initialisieren(){
-    spielfeld[snakey][snakex] = SCHLANGE;
+    spielfeld[snakey][snakex] = SCHLANGEN_KOPF;
+
+    for (int stueck = 0; stueck < snakelaenge; stueck++)
+    {
+        int kx = sstueckx[stueck];
+        int ky = sstuecky[stueck];
+        spielfeld[ky][kx] = SCHLANGEN_STUECK;
+    }
+
 }
+
+void bewege_schlange_im_spielfeld(int old_snakex, int old_snakey)
+{   
+    //Lösche aus dem SPielfeld das letzte Schlangenstückchen
+    int kx = sstueckx[snakelaenge-1];
+    int ky = sstuecky[snakelaenge-1];
+    spielfeld[ky][kx] = ' ';
+
+
+
+    //Alle weiteren Schlangenstücke rücken eins auf
+    for(int stueck=snakelaenge-1; stueck>=1;stueck--)
+    {
+        sstueckx[stueck] = sstueckx[stueck-1];
+        sstuecky[stueck] = sstuecky[stueck-1];
+    }   
+    
+    // Setze das 1.Stück auf die alte Schlangenkopfposition
+    sstueckx[0] = old_snakex;
+    sstuecky[0] = old_snakey;
+
+    schlange_initialisieren();
+
+}
+
+
 
 int main() {
 
     srand(time(NULL));
+   
+    for (int stueck=0; stueck<START_SCHLANGE_LAENGE; stueck++)
+    {
+        sstueckx[stueck] = snakex-stueck-1;
+        sstuecky[stueck] = snakey;
+    }
+
     spielfeld_initialisieren();
+    schlange_initialisieren();
 
     //Spielschleife
     int counter = 0;
+    char richtung = 'w';
 
-    while(1) {
+    while(1)
+        {
         clear();
         spielfeld_ausgeben();
         counter++;
-        printf("%d",counter);
+        printf("Länge: %d, Update: %d",snakelaenge,counter);
+        printf("\ntop left:%c\n",spielfeld[0][0]);
         
-        //Hat der Benutzer eine Taste gedrückt?
-        if (kbhit()){
-            //Schlange von alter Position löschen
-            spielfeld[snakey][snakex] = LEER;
-            char taste = getchar();
-            if (taste=='w'){
-                snakey = snakey-1;
-            }
-            if (taste=='s'){
-                snakey = snakey+1;
-            }
-            if (taste=='a'){
-                snakex = snakex-1;
-            }
-            if (taste=='d'){
-                snakex = snakex+1;
-            }
-            if (snakex == 0){
-                snakex = 1;
-            }
-            if (snakey == 0){
-                snakey = 1;
-            }
-            if (snakey == HOEHE-1){
-                snakey = HOEHE-2;
-            }
-            if (snakex == BREITE-1){
-                snakex = BREITE-2;
-            }
 
-            //Schlange an neue Stelle erzeugen
-            schlange_initialisieren();
+        printf("sx=%d, sy=%d\n", snakex,snakey);
+        for (int stueck=0; stueck<snakelaenge; stueck++)
+        {
+            printf("stueck #%d: x=%d, y=%d\n", stueck, sstueckx[stueck], sstuecky[stueck]);
         }
-        mssleep(100);
-    }
+        
+        if (kbhit())
+            {
+            char taste = getchar();
+            richtung = taste;
+            if (taste=='q')
+            {
+              quit_game();
+            }
+            
+            }
+        
+        old_snakex = snakex;
+        old_snakey = snakey;
+
+        switch (richtung)
+            {
+            case 'w':
+                snakey = snakey - 1;
+                break;
+
+            case 's':
+                snakey = snakey + 1;
+                break;
+
+            case 'a':
+                snakex = snakex - 1;
+                break;
+
+            case 'd':
+                snakex = snakex + 1;
+                break;
+
+            default:
+                break;
+            };
+
+        wand_check();
+        //Schlange an neue Stelle erzeugen
+        bewege_schlange_im_spielfeld(old_snakex, old_snakey);
+        mssleep(120);
+        
+        }
 
     return 0;
 }

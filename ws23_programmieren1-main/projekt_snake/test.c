@@ -103,9 +103,10 @@ int main() {
 
     //Spielschleife
     int counter = 0;
-    char richtung = 'w';
+    char richtung = ' ';
 
-    while(1) {
+    while(1)
+        {
         clear();
         spielfeld_ausgeben();
         counter++;
@@ -158,7 +159,7 @@ int main() {
         schlange_initialisieren();
         
         mssleep(100);
-    }
+        }
 
     return 0;
 }
