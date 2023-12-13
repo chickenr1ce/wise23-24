@@ -15,3 +15,5 @@
 #define SCHLANGEN_KOPF '@'
 #define HINDERNIS '#'
 #define SCHLANGEN_STUECK '+'
+
+#define SPRUCH1 "Ich hoffe es hat geschmeckt! Das war dein x-tes Futterstück!"

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
 #include "params.h"
 #include "snake_hilfsfunktionen.h"
 
@@ -21,6 +22,8 @@ int old_snakex;
 
 char richtung;
 
+int anz_spruchzeichen;
+
 void quit_game(){
     printf("\nSpiel beendet!\n");
     exit(0);
@@ -40,12 +43,34 @@ void waende_einfuegen()
             else
             spielfeld[i][j] = LEER;
         }
-            
     }
 }
 
 void spielfeld_ausgeben()
-{
+{   
+    //printf("%s\n",SPRUCH1);
+    
+    char TEIL_SPRUCH[90];
+    if(anz_spruchzeichen < strlen(SPRUCH1))
+    {
+        int i;
+        for (i = 0; i < anz_spruchzeichen; i++)
+        {  
+            TEIL_SPRUCH[i] = SPRUCH1[i];
+        }
+        TEIL_SPRUCH[i] = '\0';
+
+        int numSpaces = 90 - anz_spruchzeichen;
+
+        printf("%*s\n", numSpaces, TEIL_SPRUCH);
+        printf("n=%d\n",anz_spruchzeichen);
+        anz_spruchzeichen++;
+    }
+    else
+    {
+        anz_spruchzeichen=0;
+        printf("\n\n");
+    }
 
     for (int i = 0; i < HOEHE; i++)
         {
@@ -54,7 +79,7 @@ void spielfeld_ausgeben()
                 printf("%c", spielfeld[i][j]);
             }
             printf("\n");
-        }   
+        }    
 }
 
 void futter_einfuegen(){
@@ -151,7 +176,7 @@ void bewege_schlange_im_spielfeld(int old_snakex, int old_snakey)
     //Lösche aus dem SPielfeld das letzte Schlangenstückchen
     int kx = sstueckx[snakelaenge-1];
     int ky = sstuecky[snakelaenge-1];
-    spielfeld[ky][kx] = ' ';
+    spielfeld[ky][kx] = LEER;
 
 
 
